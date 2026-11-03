@@ -1,5 +1,5 @@
 name: My First Workflow
-on: 
+on:
   push:
     branches:
       - main
@@ -10,57 +10,57 @@ jobs:
     name: My First Job
     runs-on: ubuntu-latest
     steps:
-     - name: Checkout Repository Code
-       uses: actions/checkout@v4
-     - name: Display Repository Tree
-       run: tree
-    
-     - name: Change README Header using sed
-       run: |
-         echo "=== Modifying README Header ==="
-         # This swaps any line starting with '#' to '# My Checkout'
-         sed -i 's/^#.*/# My Checkout - Approved/' README.md
-       shell: bash
+      - name: Checkout Repository Code
+        uses: actions/checkout@v4
+      - name: Display Repository Tree
+        run: tree
 
-     - name: Verify Modified README
-       run: |
-         echo "=== Checking current README contents ==="
-         cat README.md
-       shell: bash
+      - name: Change README Header using sed
+        run: |
+          echo "=== Modifying README Header ==="
+          # This swaps any line starting with '#' to '# My Checkout'
+          sed -i 's/^#.*/# My Checkout - Approved/' README.md
+        shell: bash
 
-     - name: Greet the user
-       run: |
-        echo "Hello ${{github.actor}}"
-        echo "Current branch is '${{ github.ref }}'."
-        echo "My API key will '${{ secrets.APIKEY }}'."
-        echo "My Persekitaran is '${{ vars.PERSEKITARAN }}'."
+      - name: Verify Modified README
+        run: |
+          echo "=== Checking current README contents ==="
+          cat README.md
+        shell: bash
 
-        echo "My ENV API key will '${{ env.API_KEY }}'."
-        echo "My ENV Persekitaran is '${{ env.MYPERSEKITARAN }}'."
-       env:
-        API_KEY: ${{ secrets.APIKEY }}
-        MYPERSEKITARAN: ${{ vars.PERSEKITARAN }}
-       shell: bash
+      - name: Greet the user
+        run: |
+          echo "Hello ${{github.actor}}"
+          echo "Current branch is '${{ github.ref }}'."
+          echo "My API key will '${{ secrets.APIKEY }}'."
+          echo "My Persekitaran is '${{ vars.PERSEKITARAN }}'."
+
+          echo "My ENV API key will '${{ env.API_KEY }}'."
+          echo "My ENV Persekitaran is '${{ env.MYPERSEKITARAN }}'."
+        env:
+          API_KEY: ${{ secrets.APIKEY }}
+          MYPERSEKITARAN: ${{ vars.PERSEKITARAN }}
+        shell: bash
   Test:
     runs-on: ubuntu-latest
     environment: Test
     needs: first_job
     steps:
-     - run: |
-        echo "Hello ${{ vars.PERSEKITARAN }} from ${{ github.actor }}."
-        sec=$(echo ${{ secrets.APIKEY }} | sed 's/./& /g')
-        echo "My secret is '$sec'."
-       shell: bash
+      - run: |
+          echo "Hello ${{ vars.PERSEKITARAN }} from ${{ github.actor }}."
+          sec=$(echo ${{ secrets.APIKEY }} | sed 's/./& /g')
+          echo "My secret is '$sec'."
+        shell: bash
   Load-Test:
     runs-on: ubuntu-latest
     environment: Load-Test
     needs: first_job
     steps:
-     - run: |
-        echo "Hello ${{ vars.PERSEKITARAN }} from ${{ github.actor }}."
-        sec=$(echo ${{ secrets.APIKEY }} | sed 's/./& /g')
-        echo "My secret is '$sec'."
-       shell: bash
+      - run: |
+          echo "Hello ${{ vars.PERSEKITARAN }} from ${{ github.actor }}."
+          sec=$(echo ${{ secrets.APIKEY }} | sed 's/./& /g')
+          echo "My secret is '$sec'."
+        shell: bash
   Production:
     runs-on: ubuntu-latest
     environment:
@@ -68,11 +68,8 @@ jobs:
       url: https://writeabout.net
     needs: [Test, Load-Test]
     steps:
-     - run: |
-        echo "Hello ${{ vars.PERSEKITARAN }} from ${{ github.actor }}."
-        sec=$(echo ${{ secrets.APIKEY }} | sed 's/./& /g')
-        echo "My secret is '$sec'."
-       shell: bash
-     
-    
-    
+      - run: |
+          echo "Hello ${{ vars.PERSEKITARAN }} from ${{ github.actor }}."
+          sec=$(echo ${{ secrets.APIKEY }} | sed 's/./& /g')
+          echo "My secret is '$sec'."
+        shell: bash
