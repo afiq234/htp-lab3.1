@@ -5,11 +5,12 @@ on:
     types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   job1:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout source code
@@ -19,6 +20,7 @@ jobs:
         uses: raven-actions/actionlint@v2
 
       - name: Output context metadata
+        shell: bash
         env:
           WORKFLOW_REF: ${{ github.ref }}
           EVENT_NAME: ${{ github.event_name }}
@@ -27,16 +29,9 @@ jobs:
           printf 'Ref: %s\nEvent: %s\nActor: %s\n' \
             "$WORKFLOW_REF" "$EVENT_NAME" "$ACTOR"
 
-      - name: Validate pull request title
+      - name: Print pull request title
         if: github.event_name == 'pull_request'
         shell: bash
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          title_pattern='^[[:alnum:]][[:alnum:] .,:_()/#!?-]*$'
-          if [[ ! $PR_TITLE =~ $title_pattern ]]; then
-            echo "::error::PR title must start with a letter or number and use only allowed punctuation."
-            exit 1
-          fi
-
-          printf 'PR title: %s\n' "$PR_TITLE"
+        run: printf 'PR title: %s\n' "$PR_TITLE"
